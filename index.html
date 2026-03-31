@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Milk Diary 🥛</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== CSS RESET & ROOT ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #FDF6EC;
+      --cream-dark: #F5E6D0;
+      --warm-white: #FFFDF9;
+      --amber: #E8A23B;
+      --amber-light: #F5C06A;
+      --amber-dark: #C4831E;
+      --brown: #7B4F2E;
+      --brown-light: #A07050;
+      --brown-pale: #D4B896;
+      --milk-white: #FEFEFE;
+      --green: #5A9E6F;
+      --green-light: #7DBF91;
+      --green-pale: #EAF5EE;
+      --red: #D95F5F;
+      --red-pale: #FDEAEA;
+      --blue: #5B8DD9;
+      --blue-pale: #EAF0FB;
+      --shadow-sm: 0 2px 8px rgba(123,79,46,0.10);
+      --shadow-md: 0 4px 20px rgba(123,79,46,0.15);
+      --shadow-lg: 0 8px 40px rgba(123,79,46,0.20);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      color: var(--brown);
+      overflow-x: hidden;
+    }
+
+    /* ===== BACKGROUND DECORATION ===== */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -10%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(232,162,59,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -5%;
+      left: -5%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(90,158,111,0.10) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===== WRAPPER ===== */
+    .app-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== HEADER ===== */
+    .app-header {
+      text-align: center;
+      padding: 24px 20px 18px;
+    }
+    .header-icon {
+      font-size: 56px;
+      display: block;
+      margin-bottom: 6px;
+      animation: gentle-bob 3s ease-in-out infinite;
+    }
+    @keyframes gentle-bob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    .app-title {
+      font-family: 'Pacifico', cursive;
+      font-size: 38px;
+      color: var(--amber-dark);
+      text-shadow: 2px 2px 0px rgba(232,162,59,0.3);
+      line-height: 1;
+    }
+    .app-subtitle {
+      font-size: 15px;
+      color: var(--brown-light);
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    /* ===== MONTH NAVIGATOR ===== */
+    .month-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--warm-white);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+    .month-btn {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      border: none;
+      background: var(--cream-dark);
+      color: var(--brown);
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .month-btn:hover { background: var(--amber-light); transform: scale(1.08); }
+    .month-btn:active { transform: scale(0.95); }
+    .month-label {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--brown);
+      flex: 1;
+      text-align: center;
+      min-width: 0;
+    }
+
+    /* ===== SUMMARY CARD ===== */
+    .summary-card {
+      background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dark) 100%);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-md);
+      color: white;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+    .summary-item {
+      text-align: center;
+    }
+    .summary-item:nth-child(2) {
+      border-left: 1.5px solid rgba(255,255,255,0.3);
+      border-right: 1.5px solid rgba(255,255,255,0.3);
+    }
+    .summary-value {
+      font-size: 26px;
+      font-weight: 900;
+      display: block;
+      line-height: 1;
+    }
+    .summary-label {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.85;
+      margin-top: 3px;
+      display: block;
+    }
+    .summary-amount {
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    /* ===== CALENDAR ===== */
+    .calendar-card {
+      background: var(--warm-white);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .weekday-label {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--brown-light);
+      padding: 4px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .day-cell {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      border: 2px solid transparent;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      min-height: 0;
+    }
+    .day-cell:active { transform: scale(0.94); }
+    .day-cell.empty { cursor: default; pointer-events: none; background: transparent; }
+    .day-cell.past-day { background: var(--cream); }
+    .day-cell.today {
+      border-color: var(--amber);
+      background: linear-gradient(135deg, #FFF9F0, #FFF3DD);
+    }
+    .day-cell.future-day {
+      background: var(--cream);
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .day-cell.has-entry { background: var(--green-pale); border-color: var(--green); }
+    .day-cell.skipped { background: var(--red-pale); border-color: var(--red); }
+    .day-cell:not(.empty):not(.future-day):hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-sm);
+      z-index: 2;
+    }
+    .day-num {
+      font-size: clamp(12px, 2.2vw, 18px);
+      font-weight: 800;
+      color: var(--brown);
+      line-height: 1;
+    }
+    .day-cell.skipped .day-num { color: var(--red); }
+    .day-cell.has-entry .day-num { color: var(--green); }
+    .day-qty {
+      font-size: clamp(9px, 1.5vw, 11px);
+      font-weight: 700;
+      color: var(--green);
+      margin-top: 1px;
+    }
+    .day-cell.skipped .skip-icon {
+      font-size: clamp(11px, 2vw, 16px);
+      margin-top: 1px;
+    }
+    .day-today-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 8px;
+      height: 8px;
+      background: var(--amber);
+      border-radius: 50%;
+    }
+
+    /* ===== QUICK LOG LEGEND ===== */
+    .legend {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brown-light);
+    }
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+    }
+    .legend-dot.logged { background: var(--green); }
+    .legend-dot.skipped-dot { background: var(--red); }
+    .legend-dot.today-dot { background: var(--amber); }
+    .legend-dot.empty-dot { background: var(--cream-dark); border: 1.5px solid var(--brown-pale); }
+
+    /* ===== SETTINGS CARD ===== */
+    .settings-card {
+      background: var(--warm-white);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+    .settings-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--brown);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .settings-row:last-child { margin-bottom: 0; }
+    .settings-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--brown);
+    }
+    .settings-sub {
+      font-size: 13px;
+      color: var(--brown-light);
+      font-weight: 500;
+    }
+    .settings-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .settings-prefix {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--amber-dark);
+    }
+    .settings-input {
+      width: 110px;
+      padding: 10px 14px;
+      border: 2.5px solid var(--cream-dark);
+      border-radius: var(--radius-sm);
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--brown);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+      text-align: center;
+    }
+    .settings-input:focus { border-color: var(--amber); }
+
+    /* ===== PILL SELECT (Default Qty) ===== */
+    .pill-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill {
+      padding: 8px 16px;
+      border-radius: 50px;
+      border: 2.5px solid var(--cream-dark);
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brown-light);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pill:hover { border-color: var(--amber-light); }
+    .pill.active {
+      background: var(--amber);
+      border-color: var(--amber);
+      color: white;
+      box-shadow: 0 2px 10px rgba(232,162,59,0.4);
+    }
+    .pill:active { transform: scale(0.95); }
+
+    /* ===== MONTHLY HISTORY ===== */
+    .history-card {
+      background: var(--warm-white);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .history-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--brown);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .history-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--cream);
+      border: 1.5px solid var(--cream-dark);
+    }
+    .history-month {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--brown);
+    }
+    .history-stats {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .history-liters {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .history-amount {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--amber-dark);
+    }
+    .history-empty {
+      text-align: center;
+      color: var(--brown-light);
+      font-size: 14px;
+      padding: 20px;
+    }
+
+    /* ===== MODAL OVERLAY ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(70, 40, 15, 0.45);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-sheet {
+      background: var(--warm-white);
+      border-radius: 28px 28px 0 0;
+      padding: 10px 20px 32px;
+      width: 100%;
+      max-width: 640px;
+      /* KEY FIX: limit height and make content scrollable */
+      max-height: 92dvh;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 -8px 40px rgba(123,79,46,0.25);
+    }
+    .modal-overlay.open .modal-sheet {
+      transform: translateY(0);
+    }
+    /* Scrollable inner area */
+    .modal-scroll-body {
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 2px;
+    }
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--brown-pale);
+      border-radius: 2px;
+      margin: 0 auto 14px;
+      flex-shrink: 0;
+    }
+    .modal-date {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--brown);
+      text-align: center;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+    .modal-hint {
+      font-size: 13px;
+      color: var(--brown-light);
+      text-align: center;
+      margin-bottom: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .qty-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .qty-btn {
+      padding: 12px 10px;
+      border-radius: 16px;
+      border: 2.5px solid var(--cream-dark);
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .qty-btn:active { transform: scale(0.95); }
+    .qty-btn:hover { border-color: var(--amber-light); transform: scale(1.02); }
+    .qty-btn.selected {
+      background: linear-gradient(135deg, var(--amber-light), var(--amber));
+      border-color: var(--amber);
+      color: white;
+      box-shadow: 0 4px 16px rgba(232,162,59,0.4);
+    }
+    .qty-btn.skip-btn {
+      border-color: var(--red);
+      grid-column: span 2;
+    }
+    .qty-btn.skip-btn.selected {
+      background: linear-gradient(135deg, #E87070, var(--red));
+      border-color: var(--red);
+      box-shadow: 0 4px 16px rgba(217,95,95,0.4);
+    }
+    .qty-btn-icon { font-size: 20px; }
+    .qty-btn-label {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--brown);
+    }
+    .qty-btn.selected .qty-btn-label { color: white; }
+    .qty-btn-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--brown-light);
+    }
+    .qty-btn.selected .qty-btn-sub { color: rgba(255,255,255,0.8); }
+
+    /* Custom quantity */
+    .custom-qty-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: var(--cream);
+      border: 2px solid var(--cream-dark);
+    }
+    .custom-qty-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--brown);
+      flex: 1;
+    }
+    .custom-qty-input {
+      width: 90px;
+      padding: 8px 10px;
+      border: 2.5px solid var(--cream-dark);
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--brown);
+      background: var(--warm-white);
+      outline: none;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .custom-qty-input:focus { border-color: var(--amber); }
+    .custom-qty-unit {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brown-light);
+    }
+
+    /* Fixed action bar at bottom of modal */
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+      padding-top: 8px;
+    }
+    .btn-cancel {
+      flex: 1;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 2.5px solid var(--cream-dark);
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--brown-light);
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-cancel:hover { border-color: var(--brown-pale); }
+    .btn-save {
+      flex: 2;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: linear-gradient(135deg, var(--amber-light), var(--amber-dark));
+      font-family: 'Nunito', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(196,131,30,0.35);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(196,131,30,0.45); }
+    .btn-save:active { transform: scale(0.97); }
+
+    /* ===== TOAST NOTIFICATION ===== */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--brown);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 700;
+      z-index: 200;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+      box-shadow: var(--shadow-lg);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ===== WELCOME BANNER ===== */
+    .welcome-banner {
+      background: linear-gradient(135deg, #F0FBF4, var(--green-pale));
+      border: 2px solid var(--green-light);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .welcome-icon { font-size: 36px; }
+    .welcome-text {
+      flex: 1;
+    }
+    .welcome-greeting {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--green);
+    }
+    .welcome-sub {
+      font-size: 14px;
+      color: var(--brown-light);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* ===== FIRST-RUN SETUP ===== */
+    .setup-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--cream);
+      z-index: 300;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px 16px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+    .setup-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .setup-card {
+      background: var(--warm-white);
+      border-radius: 28px;
+      padding: 32px 24px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+      margin: auto;
+    }
+    .setup-icon { font-size: 60px; margin-bottom: 12px; display: block; }
+    .setup-title {
+      font-family: 'Pacifico', cursive;
+      font-size: 28px;
+      color: var(--amber-dark);
+      margin-bottom: 6px;
+    }
+    .setup-subtitle {
+      font-size: 15px;
+      color: var(--brown-light);
+      font-weight: 600;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .setup-field {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .setup-field-label {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--brown);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .setup-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 3px solid var(--cream-dark);
+      border-radius: var(--radius-sm);
+      font-family: 'Nunito', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--brown);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .setup-input:focus { border-color: var(--amber); }
+    .setup-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .setup-pill {
+      padding: 10px 18px;
+      border-radius: 50px;
+      border: 2.5px solid var(--cream-dark);
+      background: var(--cream);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--brown-light);
+      cursor: pointer;
+      transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .setup-pill.active {
+      background: var(--amber);
+      border-color: var(--amber);
+      color: white;
+    }
+    .btn-start {
+      width: 100%;
+      padding: 18px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: linear-gradient(135deg, var(--amber-light), var(--amber-dark));
+      font-family: 'Nunito', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(196,131,30,0.4);
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(196,131,30,0.5); }
+    .btn-start:active { transform: scale(0.97); }
+
+    /* ===== RESPONSIVE ===== */
+
+    /* --- Small phones (≤ 375px width) --- */
+    @media (max-width: 375px) {
+      .app-header { padding: 16px 12px 12px; }
+      .header-icon { font-size: 40px; margin-bottom: 4px; }
+      .app-title { font-size: 28px; }
+      .app-subtitle { font-size: 13px; }
+      .month-label { font-size: 18px; }
+      .month-btn { width: 40px; height: 40px; font-size: 18px; }
+      .summary-value { font-size: 20px; }
+      .summary-amount { font-size: 22px; }
+      .welcome-icon { font-size: 28px; }
+      .welcome-greeting { font-size: 15px; }
+      .welcome-sub { font-size: 12px; }
+      .calendar-card { padding: 10px 8px; }
+      .weekday-label { font-size: 9px; }
+    }
+
+    /* --- Regular phones (376px – 480px) --- */
+    @media (max-width: 480px) {
+      .app-header { padding: 18px 16px 14px; }
+      .header-icon { font-size: 44px; }
+      .app-title { font-size: 30px; }
+      .month-label { font-size: 19px; }
+      .summary-value { font-size: 22px; }
+      .summary-amount { font-size: 24px; }
+    }
+
+    /* --- Large phones / small tablets (481px – 640px) --- */
+    @media (min-width: 481px) and (max-width: 640px) {
+      .app-title { font-size: 34px; }
+      .summary-value { font-size: 24px; }
+      .summary-amount { font-size: 26px; }
+    }
+
+    /* --- Tablets portrait (641px – 900px) --- */
+    @media (min-width: 641px) and (max-width: 900px) {
+      .summary-value { font-size: 28px; }
+      .summary-amount { font-size: 30px; }
+      .qty-btn { padding: 14px 12px; }
+      .qty-btn-label { font-size: 16px; }
+    }
+
+    /* --- Desktops (> 900px) --- */
+    @media (min-width: 901px) {
+      .app-header { padding: 32px 20px 20px; }
+      .header-icon { font-size: 64px; }
+      .app-title { font-size: 42px; }
+      .app-subtitle { font-size: 16px; }
+      .month-label { font-size: 26px; }
+      .month-btn { width: 52px; height: 52px; }
+      .summary-value { font-size: 32px; }
+      .summary-amount { font-size: 36px; }
+      .summary-label { font-size: 13px; }
+      .summary-card { padding: 22px 28px; }
+      .calendar-card { padding: 20px; }
+      .weekday-label { font-size: 13px; }
+      .qty-btn { padding: 16px 14px; }
+      .qty-btn-label { font-size: 17px; }
+      .qty-btn-icon { font-size: 22px; }
+    }
+
+    /* --- Landscape phones: short viewport height (≤ 500px tall) --- */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .app-header { padding: 10px 16px 8px; }
+      .header-icon { font-size: 32px; margin-bottom: 2px; animation: none; }
+      .app-title { font-size: 24px; }
+      .app-subtitle { display: none; }
+      .welcome-banner { padding: 10px 14px; margin-bottom: 12px; }
+      .welcome-icon { font-size: 24px; }
+      .welcome-greeting { font-size: 14px; }
+      .welcome-sub { font-size: 12px; }
+      .month-nav { padding: 8px 16px; margin-bottom: 10px; }
+      .month-btn { width: 40px; height: 40px; font-size: 18px; }
+      .month-label { font-size: 18px; }
+      .summary-card { padding: 10px 16px; margin-bottom: 10px; }
+      .summary-value { font-size: 18px; }
+      .summary-amount { font-size: 20px; }
+      .summary-label { font-size: 10px; }
+      .calendar-card { padding: 8px; margin-bottom: 10px; }
+      .weekday-label { font-size: 9px; padding: 2px 0; }
+      .app-wrapper { padding: 8px 12px 60px; }
+      /* Modal goes centered+scrollable on landscape phones */
+      .modal-overlay { align-items: center; }
+      .modal-sheet {
+        border-radius: 20px;
+        max-height: 95dvh;
+        max-height: 95vh;
+        max-width: 560px;
+        padding: 10px 16px 16px;
+      }
+      .modal-date { font-size: 15px; margin-bottom: 2px; }
+      .modal-hint { font-size: 12px; margin-bottom: 8px; }
+      .qty-grid { gap: 6px; margin-bottom: 8px; }
+      .qty-btn { padding: 8px 6px; border-radius: 12px; }
+      .qty-btn-icon { font-size: 16px; }
+      .qty-btn-label { font-size: 13px; }
+      .qty-btn-sub { font-size: 10px; }
+      .custom-qty-row { padding: 8px 12px; margin-bottom: 8px; }
+    }
+
+    /* --- iPad landscape & wider tablets --- */
+    @media (min-width: 768px) and (max-height: 700px) and (orientation: landscape) {
+      .app-header { padding: 12px 20px 10px; }
+      .header-icon { font-size: 36px; }
+      .app-title { font-size: 28px; }
+      .app-subtitle { font-size: 13px; }
+      .summary-card { padding: 12px 20px; }
+      .summary-value { font-size: 20px; }
+      .summary-amount { font-size: 22px; }
+      .modal-overlay { align-items: center; }
+      .modal-sheet {
+        border-radius: 20px;
+        max-height: 92dvh;
+        max-height: 92vh;
+        max-width: 600px;
+      }
+    }
+
+    /* ===== DIVIDER ===== */
+    .section-gap { height: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- ===== FIRST-RUN SETUP ===== -->
+<div class="setup-overlay" id="setupOverlay">
+  <div class="setup-card">
+    <span class="setup-icon">🥛</span>
+    <h1 class="setup-title">Milk Diary</h1>
+    <p class="setup-subtitle">Let's set things up first!<br/>You can always change these later in Settings.</p>
+
+    <div class="setup-field">
+      <label class="setup-field-label">💰 Price per liter (₹)</label>
+      <input class="setup-input" type="number" id="setupPrice" value="60" min="1" inputmode="numeric" placeholder="60" />
+    </div>
+
+    <div class="setup-field">
+      <label class="setup-field-label">🥛 How much milk do you usually take?</label>
+      <div class="setup-pill-row" id="setupDefaultQtyRow">
+        <button class="setup-pill" data-val="0.5">500 ml</button>
+        <button class="setup-pill active" data-val="1">1 Liter</button>
+        <button class="setup-pill" data-val="1.5">1.5 L</button>
+        <button class="setup-pill" data-val="2">2 Liters</button>
+      </div>
+    </div>
+
+    <button class="btn-start" id="btnStart">Let's Begin! 🎉</button>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div class="app-wrapper">
+  <!-- Header -->
+  <div class="app-header">
+    <span class="header-icon">🥛</span>
+    <h1 class="app-title">Milk Diary</h1>
+    <p class="app-subtitle">Your daily milk tracker ☀️</p>
+  </div>
+
+  <!-- Month Navigator -->
+  <div class="month-nav">
+    <button class="month-btn" id="btnPrevMonth" aria-label="Previous Month">‹</button>
+    <div class="month-label" id="monthLabel">Loading…</div>
+    <button class="month-btn" id="btnNextMonth" aria-label="Next Month">›</button>
+  </div>
+
+  <!-- Summary Card -->
+  <div class="summary-card">
+    <div class="summary-item">
+      <span class="summary-value" id="summaryLiters">0 L</span>
+      <span class="summary-label">Total Milk</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-value" id="summaryDays">0</span>
+      <span class="summary-label">Days Logged</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-value summary-amount" id="summaryAmount">₹0</span>
+      <span class="summary-label">Total Due</span>
+    </div>
+  </div>
+
+  <!-- Calendar -->
+  <div class="calendar-card">
+    <div class="calendar-weekdays">
+      <div class="weekday-label">Sun</div>
+      <div class="weekday-label">Mon</div>
+      <div class="weekday-label">Tue</div>
+      <div class="weekday-label">Wed</div>
+      <div class="weekday-label">Thu</div>
+      <div class="weekday-label">Fri</div>
+      <div class="weekday-label">Sat</div>
+    </div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot logged"></div> Milk logged</div>
+    <div class="legend-item"><div class="legend-dot skipped-dot"></div> Skipped</div>
+    <div class="legend-item"><div class="legend-dot today-dot"></div> Today</div>
+    <div class="legend-item"><div class="legend-dot empty-dot"></div> Not logged</div>
+  </div>
+
+  <!-- Settings -->
+  <div class="settings-card">
+    <div class="settings-title">⚙️ Settings</div>
+
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Price per Liter</div>
+        <div class="settings-sub">How much does 1 liter cost?</div>
+      </div>
+      <div class="settings-input-wrap">
+        <span class="settings-prefix">₹</span>
+        <input class="settings-input" type="number" id="priceInput" min="1" inputmode="numeric" />
+      </div>
+    </div>
+
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Default Quantity</div>
+        <div class="settings-sub">Pre-selected when you tap a day</div>
+      </div>
+    </div>
+    <div class="pill-select" id="defaultQtyPills">
+      <button class="pill" data-val="0.5">500 ml</button>
+      <button class="pill" data-val="0.75">750 ml</button>
+      <button class="pill active" data-val="1">1 L</button>
+      <button class="pill" data-val="1.5">1.5 L</button>
+      <button class="pill" data-val="2">2 L</button>
+    </div>
+  </div>
+
+  <!-- Past Months Summary -->
+  <div class="history-card">
+    <div class="history-title">📋 Monthly History</div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">No previous months yet. Keep tracking! 🌟</div>
+    </div>
+  </div>
+
+  <div class="section-gap"></div>
+</div>
+
+<!-- ===== LOG MODAL ===== -->
+<div class="modal-overlay" id="logModal" role="dialog" aria-modal="true">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+    <div class="modal-date" id="modalDateLabel">Monday, 1 January</div>
+    <div class="modal-hint">How much milk did you take today?</div>
+
+    <!-- Scrollable body: qty buttons + custom input -->
+    <div class="modal-scroll-body">
+      <div class="qty-grid" id="qtyGrid">
+        <button class="qty-btn" data-val="0.25" id="qb025">
+          <span class="qty-btn-icon">🥛</span>
+          <span class="qty-btn-label">250 ml</span>
+          <span class="qty-btn-sub">¼ Liter</span>
+        </button>
+        <button class="qty-btn" data-val="0.5" id="qb05">
+          <span class="qty-btn-icon">🥛</span>
+          <span class="qty-btn-label">500 ml</span>
+          <span class="qty-btn-sub">½ Liter</span>
+        </button>
+        <button class="qty-btn" data-val="0.75" id="qb075">
+          <span class="qty-btn-icon">🥛</span>
+          <span class="qty-btn-label">750 ml</span>
+          <span class="qty-btn-sub">¾ Liter</span>
+        </button>
+        <button class="qty-btn" data-val="1" id="qb1">
+          <span class="qty-btn-icon">🥛🥛</span>
+          <span class="qty-btn-label">1 Liter</span>
+          <span class="qty-btn-sub">Regular</span>
+        </button>
+        <button class="qty-btn" data-val="1.5" id="qb15">
+          <span class="qty-btn-icon">🥛🥛</span>
+          <span class="qty-btn-label">1.5 Liters</span>
+          <span class="qty-btn-sub">A little extra</span>
+        </button>
+        <button class="qty-btn" data-val="2" id="qb2">
+          <span class="qty-btn-icon">🥛🥛🥛</span>
+          <span class="qty-btn-label">2 Liters</span>
+          <span class="qty-btn-sub">Guests!</span>
+        </button>
+        <button class="qty-btn" data-val="2.5" id="qb25">
+          <span class="qty-btn-icon">🥛🥛🥛</span>
+          <span class="qty-btn-label">2.5 Liters</span>
+          <span class="qty-btn-sub">Big day!</span>
+        </button>
+        <button class="qty-btn skip-btn" data-val="skip" id="qbSkip">
+          <span class="qty-btn-icon">🚫</span>
+          <span class="qty-btn-label">Skipped Today</span>
+          <span class="qty-btn-sub">Didn't take milk</span>
+        </button>
+      </div>
+
+      <div class="custom-qty-row">
+        <span class="custom-qty-label">✏️ Custom amount:</span>
+        <input class="custom-qty-input" type="number" id="customQtyInput" placeholder="0" min="0.1" step="0.1" inputmode="decimal" />
+        <span class="custom-qty-unit">Liters</span>
+      </div>
+    </div><!-- /modal-scroll-body -->
+
+    <!-- Pinned action bar -->
+    <div class="modal-actions">
+      <button class="btn-cancel" id="btnCancel">Cancel</button>
+      <button class="btn-save" id="btnSave">Save ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA LAYER =====
+const STORAGE_KEY = 'milkDiary_v1';
+
+function loadData() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { entries: {}, settings: null };
+  } catch { return { entries: {}, settings: null }; }
+}
+
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+let appData = loadData();
+// entries: { "2025-01": { "2025-01-05": { qty: 1.0 } or { skip: true } } }
+
+function getMonthKey(year, month) {
+  return `${year}-${String(month + 1).padStart(2, '0')}`;
+}
+function getDayKey(year, month, day) {
+  return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+function getEntry(year, month, day) {
+  const mk = getMonthKey(year, month);
+  const dk = getDayKey(year, month, day);
+  return appData.entries[mk]?.[dk] || null;
+}
+function setEntry(year, month, day, value) {
+  const mk = getMonthKey(year, month);
+  const dk = getDayKey(year, month, day);
+  if (!appData.entries[mk]) appData.entries[mk] = {};
+  appData.entries[mk][dk] = value;
+  saveData(appData);
+}
+function clearEntry(year, month, day) {
+  const mk = getMonthKey(year, month);
+  const dk = getDayKey(year, month, day);
+  if (appData.entries[mk]) delete appData.entries[mk][dk];
+  saveData(appData);
+}
+function getMonthEntries(year, month) {
+  const mk = getMonthKey(year, month);
+  return appData.entries[mk] || {};
+}
+function getSettings() {
+  return appData.settings || { pricePerLiter: 60, defaultQty: 1 };
+}
+function saveSettings(s) {
+  appData.settings = s;
+  saveData(appData);
+}
+
+// ===== STATE =====
+const now = new Date();
+let currentYear = now.getFullYear();
+let currentMonth = now.getMonth(); // 0-indexed
+let selectedQty = null; // number or 'skip'
+let openDay = null;
+
+// ===== SETTINGS =====
+let settings = getSettings();
+
+// ===== WELCOME GREETING =====
+function setGreeting() {
+  // Welcome banner removed — nothing to update
+}
+
+// ===== MONTH NAMES =====
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function formatMonthLabel(year, month) {
+  return `${MONTHS[month]} ${year}`;
+}
+
+function formatDayLabel(year, month, day) {
+  const d = new Date(year, month, day);
+  const dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()];
+  const suffix = day === 1 || day === 21 || day === 31 ? 'st' :
+                 day === 2 || day === 22 ? 'nd' :
+                 day === 3 || day === 23 ? 'rd' : 'th';
+  return `${dayName}, ${day}${suffix} ${MONTHS[month]}`;
+}
+
+// ===== RENDER CALENDAR =====
+function renderCalendar() {
+  document.getElementById('monthLabel').textContent = formatMonthLabel(currentYear, currentMonth);
+
+  const grid = document.getElementById('calendarGrid');
+  grid.innerHTML = '';
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === currentYear && today.getMonth() === currentMonth;
+  const todayDate = today.getDate();
+
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'day-cell empty';
+    grid.appendChild(empty);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement('div');
+    cell.className = 'day-cell';
+
+    const isToday = isCurrentMonth && d === todayDate;
+    const isFuture = currentYear > today.getFullYear() ||
+      (currentYear === today.getFullYear() && currentMonth > today.getMonth()) ||
+      (currentYear === today.getFullYear() && currentMonth === today.getMonth() && d > todayDate);
+
+    const entry = getEntry(currentYear, currentMonth, d);
+
+    if (isFuture) {
+      cell.classList.add('future-day');
+    } else if (entry) {
+      if (entry.skip) {
+        cell.classList.add('skipped');
+      } else {
+        cell.classList.add('has-entry');
+      }
+    } else {
+      cell.classList.add('past-day');
+    }
+
+    if (isToday) cell.classList.add('today');
+
+    // Day number
+    const numEl = document.createElement('div');
+    numEl.className = 'day-num';
+    numEl.textContent = d;
+
+    cell.appendChild(numEl);
+
+    if (entry) {
+      if (entry.skip) {
+        const icon = document.createElement('div');
+        icon.className = 'skip-icon';
+        icon.textContent = '🚫';
+        cell.appendChild(icon);
+      } else {
+        const qtyEl = document.createElement('div');
+        qtyEl.className = 'day-qty';
+        qtyEl.textContent = entry.qty >= 1 ? `${entry.qty}L` : `${entry.qty * 1000}ml`;
+        cell.appendChild(qtyEl);
+      }
+    }
+
+    if (isToday) {
+      const badge = document.createElement('div');
+      badge.className = 'day-today-badge';
+      cell.appendChild(badge);
+    }
+
+    if (!isFuture) {
+      cell.addEventListener('click', () => openLogModal(d));
+    }
+
+    grid.appendChild(cell);
+  }
+
+  renderSummary();
+}
+
+// ===== RENDER SUMMARY =====
+function renderSummary() {
+  const entries = getMonthEntries(currentYear, currentMonth);
+  let totalLiters = 0;
+  let daysLogged = 0;
+  for (const key of Object.keys(entries)) {
+    const e = entries[key];
+    if (!e.skip) {
+      totalLiters += e.qty;
+      daysLogged++;
+    }
+  }
+  const totalAmount = totalLiters * settings.pricePerLiter;
+
+  document.getElementById('summaryLiters').textContent = `${totalLiters % 1 === 0 ? totalLiters : totalLiters.toFixed(2)} L`;
+  document.getElementById('summaryDays').textContent = daysLogged;
+  document.getElementById('summaryAmount').textContent = `₹${totalAmount % 1 === 0 ? totalAmount : totalAmount.toFixed(2)}`;
+}
+
+// ===== RENDER HISTORY =====
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  const allMonths = Object.keys(appData.entries).sort().reverse();
+
+  // Exclude current month from history if same
+  const curKey = getMonthKey(currentYear, currentMonth);
+
+  const pastMonths = allMonths.filter(k => k !== curKey);
+
+  if (pastMonths.length === 0) {
+    list.innerHTML = '<div class="history-empty">No previous months yet. Keep tracking! 🌟</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  for (const mk of pastMonths) {
+    const [y, m] = mk.split('-').map(Number);
+    const entries = appData.entries[mk] || {};
+    let totalLiters = 0;
+    let days = 0;
+    for (const e of Object.values(entries)) {
+      if (!e.skip) { totalLiters += e.qty; days++; }
+    }
+    const amount = totalLiters * settings.pricePerLiter;
+
+    const row = document.createElement('div');
+    row.className = 'history-row';
+    row.innerHTML = `
+      <div class="history-month">${MONTHS[m - 1]} ${y}</div>
+      <div class="history-stats">
+        <span class="history-liters">${totalLiters % 1 === 0 ? totalLiters : totalLiters.toFixed(2)} L</span>
+        <span class="history-amount">₹${amount % 1 === 0 ? amount : amount.toFixed(2)}</span>
+      </div>`;
+    list.appendChild(row);
+  }
+}
+
+// ===== MODAL =====
+function openLogModal(day) {
+  openDay = day;
+  const label = formatDayLabel(currentYear, currentMonth, day);
+  document.getElementById('modalDateLabel').textContent = label;
+
+  // Reset selection
+  selectedQty = null;
+  document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('customQtyInput').value = '';
+
+  // Restore existing entry if any
+  const entry = getEntry(currentYear, currentMonth, day);
+  if (entry) {
+    if (entry.skip) {
+      selectQty('skip');
+    } else {
+      const presets = ['0.25','0.5','0.75','1','1.5','2','2.5'];
+      if (presets.includes(String(entry.qty))) {
+        selectQty(entry.qty);
+      } else {
+        selectQty(null);
+        document.getElementById('customQtyInput').value = entry.qty;
+      }
+    }
+  } else {
+    // Pre-select default
+    selectQty(settings.defaultQty);
+  }
+
+  document.getElementById('logModal').classList.add('open');
+}
+
+function closeLogModal() {
+  document.getElementById('logModal').classList.remove('open');
+  openDay = null;
+}
+
+function selectQty(val) {
+  selectedQty = val;
+  document.querySelectorAll('.qty-btn').forEach(b => {
+    b.classList.toggle('selected', String(b.dataset.val) === String(val));
+  });
+  if (val !== null && val !== 'skip') {
+    document.getElementById('customQtyInput').value = '';
+  }
+}
+
+// Qty button clicks
+document.querySelectorAll('.qty-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.dataset.val === 'skip' ? 'skip' : parseFloat(btn.dataset.val);
+    selectQty(val);
+    document.getElementById('customQtyInput').value = '';
+  });
+});
+
+// Custom qty input
+document.getElementById('customQtyInput').addEventListener('input', () => {
+  const v = parseFloat(document.getElementById('customQtyInput').value);
+  if (!isNaN(v) && v > 0) {
+    selectedQty = null;
+    document.querySelectorAll('.qty-btn').forEach(b => b.classList.remove('selected'));
+  }
+});
+
+// Save
+document.getElementById('btnSave').addEventListener('click', () => {
+  const customVal = parseFloat(document.getElementById('customQtyInput').value);
+  let finalQty = selectedQty;
+
+  if (!isNaN(customVal) && customVal > 0) {
+    finalQty = customVal;
+  }
+
+  if (finalQty === null || finalQty === undefined || (typeof finalQty === 'number' && isNaN(finalQty))) {
+    showToast('Please select or enter a quantity! 🥛');
+    return;
+  }
+
+  if (finalQty === 'skip') {
+    setEntry(currentYear, currentMonth, openDay, { skip: true });
+    showToast('Marked as skipped 🚫');
+  } else {
+    setEntry(currentYear, currentMonth, openDay, { qty: finalQty });
+    const display = finalQty >= 1 ? `${finalQty} L` : `${finalQty * 1000} ml`;
+    showToast(`Saved: ${display} of milk ✓`);
+  }
+
+  closeLogModal();
+  renderCalendar();
+  renderHistory();
+  setGreeting();
+});
+
+// Cancel
+document.getElementById('btnCancel').addEventListener('click', closeLogModal);
+document.getElementById('logModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('logModal')) closeLogModal();
+});
+
+// ===== MONTH NAVIGATION =====
+document.getElementById('btnPrevMonth').addEventListener('click', () => {
+  currentMonth--;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderCalendar();
+});
+document.getElementById('btnNextMonth').addEventListener('click', () => {
+  currentMonth++;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  renderCalendar();
+});
+
+// ===== SETTINGS IN-PAGE =====
+function initSettingsUI() {
+  document.getElementById('priceInput').value = settings.pricePerLiter;
+
+  const pills = document.querySelectorAll('#defaultQtyPills .pill');
+  pills.forEach(p => {
+    p.classList.toggle('active', parseFloat(p.dataset.val) === settings.defaultQty);
+    p.addEventListener('click', () => {
+      settings.defaultQty = parseFloat(p.dataset.val);
+      saveSettings(settings);
+      pills.forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      showToast('Default quantity updated ✓');
+    });
+  });
+
+  document.getElementById('priceInput').addEventListener('change', () => {
+    const v = parseFloat(document.getElementById('priceInput').value);
+    if (!isNaN(v) && v > 0) {
+      settings.pricePerLiter = v;
+      saveSettings(settings);
+      renderSummary();
+      renderHistory();
+      showToast('Price updated ✓');
+    }
+  });
+}
+
+// ===== TOAST =====
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ===== SETUP (FIRST RUN) =====
+function initSetup() {
+  if (appData.settings) {
+    // Already set up
+    document.getElementById('setupOverlay').classList.add('hidden');
+    return;
+  }
+
+  // Setup default qty pills
+  const setupPills = document.querySelectorAll('#setupDefaultQtyRow .setup-pill');
+  let setupDefaultQty = 1;
+  setupPills.forEach(p => {
+    p.addEventListener('click', () => {
+      setupDefaultQty = parseFloat(p.dataset.val);
+      setupPills.forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+    });
+  });
+
+  document.getElementById('btnStart').addEventListener('click', () => {
+    const price = parseFloat(document.getElementById('setupPrice').value);
+    if (isNaN(price) || price <= 0) {
+      document.getElementById('setupPrice').focus();
+      return;
+    }
+    settings = { pricePerLiter: price, defaultQty: setupDefaultQty };
+    saveSettings(settings);
+    initSettingsUI();
+    document.getElementById('setupOverlay').classList.add('hidden');
+    showToast('Welcome to your Milk Diary! 🥛🎉');
+  });
+}
+
+// ===== INIT =====
+function init() {
+  setGreeting();
+  initSetup();
+  initSettingsUI();
+  renderCalendar();
+  renderHistory();
+}
+
+init();
+</script>
+</body>
+</html>
