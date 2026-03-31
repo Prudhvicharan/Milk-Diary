@@ -1309,20 +1309,17 @@ function renderSummary() {
 // ===== RENDER HISTORY =====
 function renderHistory() {
   const list = document.getElementById('historyList');
+  
+  // Show all months that have any entries
   const allMonths = Object.keys(appData.entries).sort().reverse();
 
-  // Exclude current month from history if same
-  const curKey = getMonthKey(currentYear, currentMonth);
-
-  const pastMonths = allMonths.filter(k => k !== curKey);
-
-  if (pastMonths.length === 0) {
-    list.innerHTML = '<div class="history-empty">No previous months yet. Keep tracking! 🌟</div>';
+  if (allMonths.length === 0) {
+    list.innerHTML = '<div class="history-empty">No entries yet. Keep tracking! 🌟</div>';
     return;
   }
 
   list.innerHTML = '';
-  for (const mk of pastMonths) {
+  for (const mk of allMonths) {
     const [y, m] = mk.split('-').map(Number);
     const entries = appData.entries[mk] || {};
     let totalLiters = 0;
